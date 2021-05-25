@@ -1,4 +1,18 @@
+
+
 import java.util.*;
+
+class NumberIsNegativeException extends Exception {
+    public NumberIsNegativeException(String message) {
+        super(message);
+    }
+}
+
+class NumberIsTooLargeException extends Exception {
+    public NumberIsTooLargeException(String message) {
+        super(message);
+    }
+}
 
 class Program5
 {
@@ -14,29 +28,32 @@ public static void main(String arg[])
             break;
           }
         }
-
-        
-      try{
-     
-        if(input<0) 
-          {
-             throw new NumberFormatException("number is negative");
-          }
-        if (input>100)
-         {
-            throw new NumberFormatException("number is greater than 100");
-         } 
-         else{
-             if (!flag)
-              System.out.println(input + " is a prime number.");
+        try{
+            if(input<0){
+                try{
+                    throw new NumberIsNegativeException("number is Negative");
+                }
+                catch(NumberIsNegativeException e1){
+                    System.err.println(e1);
+                }
+            }
+            else if(input>100){
+                try{
+                    throw new NumberIsTooLargeException("number is greater than 100");
+                }
+                catch(NumberIsTooLargeException e2){
+                    System.err.println(e2);
+                }
+            }
+            else{
+                if (!flag)
+                System.out.println(input + " is a prime number.");
             else
-              System.out.println(input + " is not a prime number.");
-         }     
-     
-     } 
-      catch(NumberFormatException e){
+                System.out.println(input + " is not a prime number.");
+            }
+        }
+        catch(NumberFormatException e){
             System.out.println(e);
         }
-   }
-  
+    }
 }
