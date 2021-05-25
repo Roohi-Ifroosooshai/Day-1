@@ -1,56 +1,48 @@
 
 
 
-import java.lang.Thread;
-class Factorial implements Runnable
-{
- 	Thread t;
-        int N,fact=1;
-	Factorial(int N)
-        {
-         this.N=N;
-         t=new Thread(this);
-         System.out.println("New thread: " + t);
-         t.start();
-        }
-       public void run()
-        {
-	   try
-             {
-              for(int j=1;j<=N;j++)
-                   {
-                     fact=fact*j;
-                   }
-                 System.out.println("Factorial " +N+" : "+fact);
-            t.sleep(500);
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class Program3 {
+
+   public static void main(final String[] arguments) throws InterruptedException, ExecutionException {
+    
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        
+        for (int i=1; i<=5; i++){
+            Future<Long> result = executor.submit(new Factorial(i));
             
-          }
-       catch(InterruptedException e)
-       {
-          System.out.println("Interrupted Exception");
-       }
-  }
-
-}
-
-  
-class Program3
-{
-   public static void main(String arg[])
-    {
-     try{
-       for (int i=1;i<=5;i++)
-        {
-          int n=i;
-	   new Factorial(n);
-          Thread.sleep(1000);
+            Long factorial = result.get();
+            System.out.println("Thread"+i);
+            System.out.println("Factorial of "+ i + ": " + factorial);
         }
-     }
-     catch(InterruptedException e)
-      {
-        System.out.println("Interrupted Exception");
+        executor.shutdown();
+   }  
+
+static class Factorial implements Callable<Long> {
+      private int number;
+
+      public Factorial(int number) {
+         this.number = number;
       }
-	
-    System.out.println("Returned factorial of 5 different numbers");
-  }
+
+      public Long call() throws Exception {
+         return factorial();
+      }
+
+      private Long factorial() throws InterruptedException {
+         long result = 1;
+                   
+         while (number != 0) {              
+            result = number * result;
+            number--;
+            Thread.sleep(100);          
+         }
+         return result;      
+      }
+   }
 }
